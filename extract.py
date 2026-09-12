@@ -11,6 +11,7 @@ class Invoice(BaseModel):
     due_date: str
     currency: str
     total: float
+    payment_method: str | None
 
 target = "invoice_02.pdf"
 
