@@ -16,7 +16,7 @@ class Invoice(BaseModel):
 truth = {r["file"]: r for r in json.load(open("ground_truth.json"))}
 results = []
 
-for name in sorted(truth)[:3]:
+for name in sorted(truth):
     with pdfplumber.open(f"docs/{name}") as pdf:
         text = pdf.pages[0].extract_text()
 

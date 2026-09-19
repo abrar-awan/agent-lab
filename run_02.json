@@ -97,5 +97,500 @@
       1085.76,
       1085.76
     ]
+  },
+  {
+    "file": "invoice_04.pdf",
+    "invoice_number": [
+      true,
+      "B-20260004",
+      "B-20260004"
+    ],
+    "vendor": [
+      true,
+      "Sahara Office Supply",
+      "Sahara Office Supply"
+    ],
+    "issue_date": [
+      true,
+      "2026-05-24",
+      "2026-05-24"
+    ],
+    "due_date": [
+      true,
+      "2026-06-23",
+      "2026-06-23"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      932.25,
+      932.25
+    ]
+  },
+  {
+    "file": "invoice_05.pdf",
+    "invoice_number": [
+      true,
+      "IN-20260005",
+      "IN-20260005"
+    ],
+    "vendor": [
+      true,
+      "TALLGRASS CATERING",
+      "Tallgrass Catering"
+    ],
+    "issue_date": [
+      true,
+      "2026-05-25",
+      "2026-05-25"
+    ],
+    "due_date": [
+      true,
+      "2026-06-09",
+      "2026-06-09"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      640.08,
+      640.08
+    ]
+  },
+  {
+    "file": "invoice_06.pdf",
+    "invoice_number": [
+      true,
+      "IN-20260006",
+      "IN-20260006"
+    ],
+    "vendor": [
+      true,
+      "Sahara Office Supply",
+      "Sahara Office Supply"
+    ],
+    "issue_date": [
+      true,
+      "2026-04-03",
+      "2026-04-03"
+    ],
+    "due_date": [
+      true,
+      "2026-05-18",
+      "2026-05-18"
+    ],
+    "currency": [
+      true,
+      "GBP",
+      "GBP"
+    ],
+    "total": [
+      true,
+      599.51,
+      599.51
+    ]
+  },
+  {
+    "file": "invoice_07.pdf",
+    "invoice_number": [
+      true,
+      "IN-20260007",
+      "IN-20260007"
+    ],
+    "vendor": [
+      true,
+      "Sahara Office Supply",
+      "Sahara Office Supply"
+    ],
+    "issue_date": [
+      true,
+      "2026-08-13",
+      "2026-08-13"
+    ],
+    "due_date": [
+      true,
+      "2026-09-27",
+      "2026-09-27"
+    ],
+    "currency": [
+      true,
+      "GBP",
+      "GBP"
+    ],
+    "total": [
+      true,
+      1118.2,
+      1118.2
+    ]
+  },
+  {
+    "file": "invoice_08.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260008",
+      "INV-20260008"
+    ],
+    "vendor": [
+      true,
+      "MERIDIAN SOFTWARE LTD",
+      "Meridian Software Ltd"
+    ],
+    "issue_date": [
+      true,
+      "2026-06-21",
+      "2026-06-21"
+    ],
+    "due_date": [
+      true,
+      "2026-07-06",
+      "2026-07-06"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      1833.3,
+      1833.3
+    ]
+  },
+  {
+    "file": "invoice_09.pdf",
+    "invoice_number": [
+      true,
+      "B-20260009",
+      "B-20260009"
+    ],
+    "vendor": [
+      true,
+      "Northwind Traders",
+      "Northwind Traders"
+    ],
+    "issue_date": [
+      true,
+      "2026-05-02",
+      "2026-05-02"
+    ],
+    "due_date": [
+      true,
+      "2026-05-17",
+      "2026-05-17"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      842.4,
+      842.4
+    ]
+  },
+  {
+    "file": "invoice_10.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260010",
+      "INV-20260010"
+    ],
+    "vendor": [
+      true,
+      "Meridian Software Ltd",
+      "Meridian Software Ltd"
+    ],
+    "issue_date": [
+      true,
+      "2026-07-03",
+      "2026-07-03"
+    ],
+    "due_date": [
+      true,
+      "2026-09-01",
+      "2026-09-01"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      1922.29,
+      1922.29
+    ]
+  },
+  {
+    "file": "invoice_11.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260011",
+      "INV-20260011"
+    ],
+    "vendor": [
+      true,
+      "KARACHI PAPER CO.",
+      "Karachi Paper Co."
+    ],
+    "issue_date": [
+      true,
+      "2026-02-03",
+      "2026-02-03"
+    ],
+    "due_date": [
+      true,
+      "2026-03-05",
+      "2026-03-05"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      2781.97,
+      2781.97
+    ]
+  },
+  {
+    "file": "invoice_12.pdf",
+    "invoice_number": [
+      true,
+      "B-20260012",
+      "B-20260012"
+    ],
+    "vendor": [
+      true,
+      "Meridian Software Ltd",
+      "Meridian Software Ltd"
+    ],
+    "issue_date": [
+      true,
+      "2026-03-13",
+      "2026-03-13"
+    ],
+    "due_date": [
+      true,
+      "2026-05-12",
+      "2026-05-12"
+    ],
+    "currency": [
+      true,
+      "AED",
+      "AED"
+    ],
+    "total": [
+      true,
+      835.0,
+      835.0
+    ]
+  },
+  {
+    "file": "invoice_13.pdf",
+    "invoice_number": [
+      true,
+      "B-20260013",
+      "B-20260013"
+    ],
+    "vendor": [
+      true,
+      "Karachi Paper Co.",
+      "Karachi Paper Co."
+    ],
+    "issue_date": [
+      true,
+      "2026-05-05",
+      "2026-05-05"
+    ],
+    "due_date": [
+      true,
+      "2026-06-04",
+      "2026-06-04"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      982.22,
+      982.22
+    ]
+  },
+  {
+    "file": "invoice_14.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260014",
+      "INV-20260014"
+    ],
+    "vendor": [
+      true,
+      "BLUE RIDGE LOGISTICS",
+      "Blue Ridge Logistics"
+    ],
+    "issue_date": [
+      true,
+      "2026-06-26",
+      "2026-06-26"
+    ],
+    "due_date": [
+      true,
+      "2026-07-11",
+      "2026-07-11"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      2413.6,
+      2413.6
+    ]
+  },
+  {
+    "file": "invoice_15.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260015",
+      "INV-20260015"
+    ],
+    "vendor": [
+      true,
+      "Northwind Traders",
+      "Northwind Traders"
+    ],
+    "issue_date": [
+      true,
+      "2026-04-23",
+      "2026-04-23"
+    ],
+    "due_date": [
+      true,
+      "2026-05-23",
+      "2026-05-23"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      162.0,
+      162.0
+    ]
+  },
+  {
+    "file": "invoice_16.pdf",
+    "invoice_number": [
+      true,
+      "IN-20260016",
+      "IN-20260016"
+    ],
+    "vendor": [
+      true,
+      "Northwind Traders",
+      "Northwind Traders"
+    ],
+    "issue_date": [
+      true,
+      "2026-02-08",
+      "2026-02-08"
+    ],
+    "due_date": [
+      true,
+      "2026-02-23",
+      "2026-02-23"
+    ],
+    "currency": [
+      true,
+      "AED",
+      "AED"
+    ],
+    "total": [
+      true,
+      765.77,
+      765.77
+    ]
+  },
+  {
+    "file": "invoice_17.pdf",
+    "invoice_number": [
+      true,
+      "IN-20260017",
+      "IN-20260017"
+    ],
+    "vendor": [
+      true,
+      "BLUE RIDGE LOGISTICS",
+      "Blue Ridge Logistics"
+    ],
+    "issue_date": [
+      true,
+      "2026-04-04",
+      "2026-04-04"
+    ],
+    "due_date": [
+      true,
+      "2026-06-03",
+      "2026-06-03"
+    ],
+    "currency": [
+      true,
+      "AED",
+      "AED"
+    ],
+    "total": [
+      true,
+      373.8,
+      373.8
+    ]
+  },
+  {
+    "file": "invoice_18.pdf",
+    "invoice_number": [
+      true,
+      "IN-20260018",
+      "IN-20260018"
+    ],
+    "vendor": [
+      true,
+      "Meridian Software Ltd",
+      "Meridian Software Ltd"
+    ],
+    "issue_date": [
+      true,
+      "2026-01-22",
+      "2026-01-22"
+    ],
+    "due_date": [
+      true,
+      "2026-02-21",
+      "2026-02-21"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      204.12,
+      204.12
+    ]
   }
 ]
