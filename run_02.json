@@ -1,0 +1,101 @@
+[
+  {
+    "file": "invoice_01.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260001",
+      "INV-20260001"
+    ],
+    "vendor": [
+      true,
+      "Blue Ridge Logistics",
+      "Blue Ridge Logistics"
+    ],
+    "issue_date": [
+      true,
+      "2026-04-12",
+      "2026-04-12"
+    ],
+    "due_date": [
+      true,
+      "2026-04-27",
+      "2026-04-27"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      312.39,
+      312.39
+    ]
+  },
+  {
+    "file": "invoice_02.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260002",
+      "INV-20260002"
+    ],
+    "vendor": [
+      true,
+      "SAHARA OFFICE SUPPLY",
+      "Sahara Office Supply"
+    ],
+    "issue_date": [
+      true,
+      "2026-01-10",
+      "2026-01-10"
+    ],
+    "due_date": [
+      true,
+      "2026-01-25",
+      "2026-01-25"
+    ],
+    "currency": [
+      true,
+      "USD",
+      "USD"
+    ],
+    "total": [
+      true,
+      2968.0,
+      2968.0
+    ]
+  },
+  {
+    "file": "invoice_03.pdf",
+    "invoice_number": [
+      true,
+      "INV-20260003",
+      "INV-20260003"
+    ],
+    "vendor": [
+      true,
+      "Tallgrass Catering",
+      "Tallgrass Catering"
+    ],
+    "issue_date": [
+      true,
+      "2026-05-30",
+      "2026-05-30"
+    ],
+    "due_date": [
+      true,
+      "2026-06-14",
+      "2026-06-14"
+    ],
+    "currency": [
+      true,
+      "PKR",
+      "PKR"
+    ],
+    "total": [
+      true,
+      1085.76,
+      1085.76
+    ]
+  }
+]
