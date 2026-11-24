@@ -1,39 +1,12 @@
 import os
+import sys
 import time
+from pathlib import Path
 
-from dotenv import load_dotenv
 from openai import OpenAI
 
-load_dotenv()
-
-# Order = fallback priority: free & fast first, paid last.
-PROVIDERS = {
-    "gemini": {
-        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
-        "key_env": "GEMINI_API_KEY",
-        "model_env": "GEMINI_MODEL",
-    },
-    "groq": {
-        "base_url": "https://api.groq.com/openai/v1",
-        "key_env": "GROQ_API_KEY",
-        "model_env": "GROQ_MODEL",
-    },
-    "openrouter": {
-        "base_url": "https://openrouter.ai/api/v1",
-        "key_env": "OPENROUTER_API_KEY",
-        "model_env": "OPENROUTER_MODEL",
-    },
-    "ollama": {
-        "base_url": "http://localhost:11434/v1",
-        "key_env": None,  # local, no key needed
-        "model_env": "OLLAMA_MODEL",
-    },
-    "huggingface": {
-        "base_url": "https://router.huggingface.co/v1",
-        "key_env": "HF_TOKEN",
-        "model_env": "HF_MODEL",
-    },
-}
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # repo root
+from providers import PROVIDERS  # noqa: E402
 
 PROMPT = "Reply in one short sentence: which model are you?"
 
