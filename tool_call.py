@@ -7,6 +7,8 @@ we run the tool ourselves and send the result back in a second request.
     uv run tool_call.py --tamper         # same invoice, total raised by 9.00
     uv run tool_call.py invoice_02.pdf   # an invoice with no tax line
     uv run tool_call.py --provider groq  # same round trip, OpenAI tool format
+    uv run tool_call.py --fallback          # groq -> cloudflare -> openrouter -> ollama
+    GROQ_API_KEY=bad uv run tool_call.py --fallback
 """
 
 import argparse
@@ -83,8 +85,11 @@ CHECK_TOTALS_OPENAI = {
 }
 
 
-def run_openai(provider: str, prompt: str) -> None:
-    """The same two-request round trip, through the `openai` package."""
+def run_openai(provider: str, prompt: str) -> str:
+    """The same two-request round trip, through the `openai` package.
+
+    Returns the final answer. Any failure raises, so callers can retry elsewhere.
+    """
     from openai import OpenAI
 
     cfg = PROVIDERS[provider]
@@ -92,7 +97,7 @@ def run_openai(provider: str, prompt: str) -> None:
     api_key = "ollama" if cfg["key_env"] is None else os.getenv(cfg["key_env"])
     if not model or not api_key:
         missing = cfg["model_env"] if not model else cfg["key_env"]
-        sys.exit(f"[{provider}] {missing} not set in .env")
+        raise RuntimeError(f"[{provider}] {missing} not set in .env")
     # max_retries=0: a failure should show up as a failure.
     client = OpenAI(base_url=cfg["base_url"], api_key=api_key, timeout=120, max_retries=0)
 
@@ -101,13 +106,13 @@ def run_openai(provider: str, prompt: str) -> None:
         response = client.chat.completions.create(
             model=model, messages=messages, tools=[CHECK_TOTALS_OPENAI])
     except Exception as e:
-        sys.exit(f"[{provider}] request 1 FAILED: {type(e).__name__}: {str(e)[:300]} body={getattr(e, "body", None)}")
+        raise RuntimeError(f"[{provider}] request 1 FAILED: {type(e).__name__}: {str(e)[:300]} body={getattr(e, "body", None)}") from e
     message = response.choices[0].message
     print(f"--- turn 1: what the model returned ({provider}, {model}) ---")
     print(json.dumps(message.model_dump(mode="json", exclude_none=True), indent=2))
 
     if not message.tool_calls:
-        sys.exit("\nThe model answered without calling the tool.")
+        raise RuntimeError(f"[{provider}] the model answered without calling the tool.")
     call = message.tool_calls[0]
     args = json.loads(call.function.arguments)
     result = TOOLS[call.function.name](**args)
@@ -122,9 +127,30 @@ def run_openai(provider: str, prompt: str) -> None:
         response = client.chat.completions.create(
             model=model, messages=messages, tools=[CHECK_TOTALS_OPENAI])
     except Exception as e:
-        sys.exit(f"[{provider}] request 2 FAILED: {type(e).__name__}: {str(e)[:300]} body={getattr(e, "body", None)}")
+        raise RuntimeError(f"[{provider}] request 2 FAILED: {type(e).__name__}: {str(e)[:300]} body={getattr(e, "body", None)}") from e
+    answer = response.choices[0].message.content
     print("\n--- turn 2: the model answers ---")
-    print(response.choices[0].message.content)
+    print(answer)
+    return answer
+
+
+FALLBACK_ORDER = ["groq", "cloudflare", "openrouter", "ollama"]
+
+
+def run_with_fallback(prompt: str, order: list[str]) -> tuple[str, str]:
+    """Try each provider in turn; return (provider, answer) from the first that works."""
+    errors = []
+    for i, provider in enumerate(order):
+        try:
+            # A fresh call: run_openai builds its own messages, nothing is shared.
+            return provider, run_openai(provider, prompt)
+        except Exception as e:
+            message = f"{type(e).__name__}: {e}"
+            errors.append(f"{provider}: {message}")
+            print(f"[fallback] {provider} FAILED: {message[:200]}")
+            if i + 1 < len(order):
+                print(f"-> trying {order[i + 1]}")
+    raise RuntimeError("All providers failed:\n" + "\n".join(errors))
 
 
 # 3. Load an invoice, optionally with a wrong total.
@@ -132,10 +158,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("invoice", nargs="?", default="invoice_01.pdf")
 parser.add_argument("--tamper", action="store_true")
 parser.add_argument("--provider", default="gemini", choices=list(PROVIDERS))
+parser.add_argument("--fallback", action="store_true", help="try FALLBACK_ORDER; ignores --provider")
 cli = parser.parse_args()
 target = cli.invoice
 
-if cli.provider == "mistral":  # parked: account returns 429
+if cli.provider == "mistral" and not cli.fallback:  # parked: account returns 429
     print("[mistral] SKIPPED (parked)")
     sys.exit(0)
 with pdfplumber.open(f"docs/{target}") as pdf:
@@ -153,8 +180,19 @@ prompt = (
     "Check it with the tool, then answer in one sentence.\n\n" + text
 )
 
+if cli.fallback:
+    try:
+        provider, answer = run_with_fallback(prompt, FALLBACK_ORDER)
+    except RuntimeError as e:
+        sys.exit(str(e))  # prints the combined error, exits 1
+    print(f"\nANSWER (from {provider}): {answer}")
+    sys.exit(0)
+
 if cli.provider != "gemini":
-    run_openai(cli.provider, prompt)
+    try:
+        run_openai(cli.provider, prompt)
+    except RuntimeError as e:
+        sys.exit(str(e))
     sys.exit(0)
 
 contents = [types.Content(role="user", parts=[types.Part(text=prompt)])]
