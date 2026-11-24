@@ -6,9 +6,12 @@ we run the tool ourselves and send the result back in a second request.
     uv run tool_call.py                  # invoice_01, honest
     uv run tool_call.py --tamper         # same invoice, total raised by 9.00
     uv run tool_call.py invoice_02.pdf   # an invoice with no tax line
+    uv run tool_call.py --provider groq  # same round trip, OpenAI tool format
 """
 
+import argparse
 import json
+import os
 import re
 import sys
 
@@ -16,6 +19,7 @@ import pdfplumber
 from google.genai import types
 
 from llm import generate
+from providers import PROVIDERS
 
 
 # 1. The tool: plain Python. The model never sees this code.
@@ -68,25 +72,90 @@ def tokens(response) -> str:
     return f"{u.prompt_token_count} in / {u.candidates_token_count} out / {u.thoughts_token_count or 0} thinking"
 
 
+# OpenAI-format version of the same tool, for every non-Gemini provider.
+CHECK_TOTALS_OPENAI = {
+    "type": "function",
+    "function": {
+        "name": CHECK_TOTALS.name,
+        "description": CHECK_TOTALS.description,
+        "parameters": CHECK_TOTALS.parameters_json_schema,
+    },
+}
+
+
+def run_openai(provider: str, prompt: str) -> None:
+    """The same two-request round trip, through the `openai` package."""
+    from openai import OpenAI
+
+    cfg = PROVIDERS[provider]
+    model = os.getenv(cfg["model_env"])
+    api_key = "ollama" if cfg["key_env"] is None else os.getenv(cfg["key_env"])
+    if not model or not api_key:
+        missing = cfg["model_env"] if not model else cfg["key_env"]
+        sys.exit(f"[{provider}] {missing} not set in .env")
+    # max_retries=0: a failure should show up as a failure.
+    client = OpenAI(base_url=cfg["base_url"], api_key=api_key, timeout=120, max_retries=0)
+
+    messages = [{"role": "user", "content": prompt}]
+    try:
+        response = client.chat.completions.create(
+            model=model, messages=messages, tools=[CHECK_TOTALS_OPENAI])
+    except Exception as e:
+        sys.exit(f"[{provider}] request 1 FAILED: {type(e).__name__}: {str(e)[:300]} body={getattr(e, "body", None)}")
+    message = response.choices[0].message
+    print(f"--- turn 1: what the model returned ({provider}, {model}) ---")
+    print(json.dumps(message.model_dump(mode="json", exclude_none=True), indent=2))
+
+    if not message.tool_calls:
+        sys.exit("\nThe model answered without calling the tool.")
+    call = message.tool_calls[0]
+    args = json.loads(call.function.arguments)
+    result = TOOLS[call.function.name](**args)
+    print(f"\n--- we run {call.function.name}({json.dumps(args)}) ---")
+    print(result)
+
+    messages.append(message.model_dump(exclude_none=True))  # the model's own turn, call included
+    messages.append({"role": "tool", "tool_call_id": call.id, "content": json.dumps(result)})
+    try:
+        response = client.chat.completions.create(
+            model=model, messages=messages, tools=[CHECK_TOTALS_OPENAI])
+    except Exception as e:
+        sys.exit(f"[{provider}] request 2 FAILED: {type(e).__name__}: {str(e)[:300]} body={getattr(e, "body", None)}")
+    print("\n--- turn 2: the model answers ---")
+    print(response.choices[0].message.content)
+
+
 # 3. Load an invoice, optionally with a wrong total.
-names = [a for a in sys.argv[1:] if not a.startswith("--")]
-target = names[0] if names else "invoice_01.pdf"
+parser = argparse.ArgumentParser()
+parser.add_argument("invoice", nargs="?", default="invoice_01.pdf")
+parser.add_argument("--tamper", action="store_true")
+parser.add_argument("--provider", default="gemini", choices=list(PROVIDERS))
+cli = parser.parse_args()
+target = cli.invoice
+
+if cli.provider == "mistral":  # parked: account returns 429
+    print("[mistral] SKIPPED (parked)")
+    sys.exit(0)
 with pdfplumber.open(f"docs/{target}") as pdf:
     text = pdf.pages[0].extract_text()
 
-if "--tamper" in sys.argv:
+if cli.tamper:
     *body, last = text.splitlines()  # the last line is always the total
     amount = re.findall(r"[\d,]+\.\d{2}", last)[-1]
     fake = f"{float(amount.replace(',', '')) + 9:,.2f}"
     text = "\n".join(body + [last.replace(amount, fake)])
     print(f"(tampered: total {amount} -> {fake})\n")
 
-contents = [
-    types.Content(role="user", parts=[types.Part(text=(
-        "Is this invoice's arithmetic consistent? "
-        "Check it with the tool, then answer in one sentence.\n\n" + text
-    ))])
-]
+prompt = (
+    "Is this invoice's arithmetic consistent? "
+    "Check it with the tool, then answer in one sentence.\n\n" + text
+)
+
+if cli.provider != "gemini":
+    run_openai(cli.provider, prompt)
+    sys.exit(0)
+
+contents = [types.Content(role="user", parts=[types.Part(text=prompt)])]
 
 # 4. Request 1: the model decides to call the tool.
 response = generate(contents=contents, config=config)
