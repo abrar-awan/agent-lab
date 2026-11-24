@@ -114,7 +114,9 @@ def run_openai(provider: str, prompt: str) -> None:
     print(f"\n--- we run {call.function.name}({json.dumps(args)}) ---")
     print(result)
 
-    messages.append(message.model_dump(exclude_none=True))  # the model's own turn, call included
+    assistant_turn = message.model_dump(exclude_none=True)  # the model's own turn, call included
+    assistant_turn.setdefault("content", "")  # exclude_none drops content=None; some providers require the key
+    messages.append(assistant_turn)
     messages.append({"role": "tool", "tool_call_id": call.id, "content": json.dumps(result)})
     try:
         response = client.chat.completions.create(
